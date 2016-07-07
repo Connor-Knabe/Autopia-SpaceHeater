@@ -1,0 +1,28 @@
+{
+  "name": "autopia-spaceheater",
+  "version": "0.0.1",
+  "description": "Module for Tessel 2 or RPi that will turn on a space heater based on a Google Calendar appointment",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^3.5.0",
+    "express": "^4.14.0",
+    "mocha": "^2.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Connor-Knabe/Autopia-SpaceHeater.git"
+  },
+  "author": "Connor Knabe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Connor-Knabe/Autopia-SpaceHeater/issues"
+  },
+  "homepage": "https://github.com/Connor-Knabe/Autopia-SpaceHeater#readme"
+}
