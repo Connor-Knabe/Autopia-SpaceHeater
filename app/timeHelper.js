@@ -8,6 +8,10 @@ exports.grabAppointments = function(dateObj){
         endTime:"",
         id:""
     };
+    for(var i=0;i<dateObj.length;i++){
+        console.log(i);
+    }
+
     if(dateObj && dateObj[0]){
         var eventSummary = dateObj[0].summary || null;
         if(eventSummary){
