@@ -15,10 +15,12 @@ describe("Time Service", function(){
     describe("turnOn",function(){
         it("turns on when given a calendar appointment within two hours", function(){
             var fakeRawCalendarObj = [{"kind":"calendar#event","etag":"\"234234234\"","id":"laksjdflkajsdlkfjasdf","status":"confirmed","htmlLink":"","created":"2016-07-07T12:17:29.000Z","updated":"2016-07-07T12:17:29.879Z","summary":"Connor 60 min","creator":{"email":"fakeemail@emaill.com","self":true},"organizer":{"email":"fakeemail@emaill.com","self":true},"start":{"dateTime":"2016-07-07T17:00:00-05:00"},"end":{"dateTime":"2016-07-07T18:00:00-05:00"},"iCalUID":"56476E12-291B-4AA8-A3E7-462DF1217DA0","sequence":0,"reminders":{"useDefault":false,"overrides":[{"method":"popup","minutes":30}]}}];
+            var sandbox = sinon.sandbox.create();
+            var spy = sandbox.spy(timeService,"helloWorld");
 
+            timeService.turnOn(fakeRawCalendarObj);
 
-            // timeService.turnOn(fakeCalendarObj);
-
+            assert.isTrue(spy.calledOnce);
         });
         it("turns on when given a calendar appointment within two hours", function(){
             // var fakeCalendarObj = {

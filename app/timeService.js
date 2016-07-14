@@ -1,13 +1,14 @@
 var CronJob = require('node-cron').CronJob;
-
-exports.turnOn = function(calendarObj){
-
-
+exports.helloWorld = function(){
+    console.log("Hello World");
 };
 
-function helloWorld(){
-    console.log("Hello World");
-}
+exports.turnOn = function(calendarObj){
+    
+    this.helloWorld();
+};
+
+
 
 // var job = new CronJob({
 //     cronTime: '00 30 11 * * 1-5',
