@@ -1,12 +1,11 @@
 exports.grabAppointments = function(dateObj){
     var parsedName, parsedDuration, parsedStartTime, parsedEndTime, parsedId;
-
     var newObj = [{
-        name:"",
+        name:'',
         duration:null,
         startTime:null,
-        endTime:"",
-        id:""
+        endTime:'',
+        id:''
     }];
 
     if(dateObj && dateObj[0]){
