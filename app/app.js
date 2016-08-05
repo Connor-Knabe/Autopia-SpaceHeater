@@ -1,34 +1,43 @@
 var rp = require('request-promise');
 var express = require('express');
 var cronTimeService = require('./cronTimeService');
+var heaterService = require('./heaterService');
+
 var routes = require('./routes.js');
 var sInfo = require('./sInfo.js');
 var app = express();
 var port = process.env.PORT || 3000;
+var calendarCheckInterval = 30;
 
 app.use('/', routes);
 app.listen(port);
 console.log('Magic happens on port ' + port +" - "+ new Date());
 
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+    res.send('Hello World!');
 });
 
+app.get('/turnOn/:time', function(req, response){
+	var timeInMins = req.params.time;
 
-var options = {
-    uri: sInfo.url,
-    headers: {
-        'User-Agent': 'Request-Promise'
-    },
-    json: true // Automatically parses the JSON string in the response
-};
+    heaterService.turnOnTimed(timeInMins);
+});
+
+app.get('/turnOn', function (req, res) {
+    heaterService.turnOnTimed();
+
+    res.send('Turned on');
+});
+
 
 setInterval(function(){
     console.log(new Date(),' checking for new data');
     //this occurs every 30 minutes
-    rp(options).then(function (data) {
+    rp({
+        uri: sInfo.url,
+        json: true // Automatically parses the JSON string in the response
+    }).then(function (data) {
         // console.log('data',data);
-        console.log('\n\n\n');
         cronTimeService.addCal(data);
     }).catch(function (err) {
         cronTimeService.addCal(null);
@@ -37,4 +46,4 @@ setInterval(function(){
         }
     });
 
-},5*1000);
+},calendarCheckInterval*60*1000);
