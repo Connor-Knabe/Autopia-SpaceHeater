@@ -35,7 +35,6 @@ function clearOldJobs(){
             job.jobEnd.cancel();
         }
     });
-
     cronJobs = [];
 }
 

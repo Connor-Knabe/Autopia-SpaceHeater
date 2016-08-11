@@ -7,7 +7,7 @@ var routes = require('./routes.js');
 var sInfo = require('./sInfo.js');
 var app = express();
 var port = process.env.PORT || 3000;
-var calendarCheckInterval = 30;
+var calendarCheckInterval = 1;
 
 app.use('/', routes);
 app.listen(port);
@@ -19,25 +19,20 @@ app.get('/', function (req, res) {
 
 app.get('/turnOn/:time', function(req, response){
 	var timeInMins = req.params.time;
-
     heaterService.turnOnTimed(timeInMins);
 });
 
 app.get('/turnOn', function (req, res) {
     heaterService.turnOnTimed();
-
     res.send('Turned on');
 });
 
-
 setInterval(function(){
     console.log(new Date(),' checking for new data');
-    //this occurs every 30 minutes
     rp({
-        uri: sInfo.url,
+        uri: sInfo.calendarUrl,
         json: true // Automatically parses the JSON string in the response
     }).then(function (data) {
-        // console.log('data',data);
         cronTimeService.addCal(data);
     }).catch(function (err) {
         cronTimeService.addCal(null);
