@@ -1,4 +1,4 @@
-var timeHelper = require("../app/timeHelper");
+var timeHelper = require("../timeHelper");
 var expect    = require("chai").expect;
 describe("Time Helper", function(){
     describe("grabAppointments",function(){

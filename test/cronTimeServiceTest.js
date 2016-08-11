@@ -1,4 +1,4 @@
-var timeService = require("../app/cronTimeService");
+var timeService = require("../cronTimeService");
 var chai = require("chai");
 var expect = require("chai").expect;
 var assert = require("chai").assert;
@@ -31,7 +31,7 @@ describe("Cron Time Service", function(){
         });
     });
     describe("turnOn", function(){
-    
+
         it("turns on when given a calendar appointment within two hours", function(){
             // var fakeCalendarObj = {
             //
