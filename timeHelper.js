@@ -28,7 +28,6 @@ exports.grabAppointments = function(dateObj){
                     parsedEndTime = new Date(parsedStartTime.getTime() + parsedDuration*60*1000);
                 }
                 parsedStartTime = new Date(parsedStartTime.getTime() -30*60*1000);
-                parsedEndTime = new Date(parsedStartTime.getTime() + 0.5*60*1000);
             }
             newObj[i] = {
                 name:parsedName,

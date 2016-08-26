@@ -5,13 +5,17 @@ var tessel = require('tessel'); // Import tessel
 var pin = tessel.port.B.pin[7]; // select pin 2 on port A
 pin.pull('pulldown');
 
+var leds = tessel.led;
+leds[0].low();
+leds[1].low();
+leds[2].low();
+leds[3].low();
+
 var i = 0;
 var loggingInterval = null;
-var heaterStartTime = null;
-var heaterEndTime = null;
 var warningTimeForHeater = 150;
 var heaterWarningInterval = null;
-var debug = true;
+var debug = false;
 
 turnOff = function(){
     pin.output(0); // power off
@@ -20,21 +24,29 @@ turnOff = function(){
     clearInterval(heaterWarningInterval);
 };
 
-turnOn = function(){
+turnOn = function(endTime){
+    var curTime = new Date();
+    var timeToEnd = endTime.getTime() - curTime.getTime();
+    console.log(endTime.getTime() - curTime.getTime());
+    timeToEnd = timeToEnd / 60000;
     pin.output(1); // power on
-    messageTwilio('Turning on heater', shouldSendToRommates);
-
     var shouldSendToRommates = false;
-    heaterStartTime = new Date();
+    messageTwilio('Turning on heater should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
+    var heaterStartTime = new Date();
     clearInterval(heaterWarningInterval);
-    startHeaterAlarmTimer();
+    startHeaterAlarmTimer(heaterStartTime);
 };
 
-startHeaterAlarmTimer = function(){
+startHeaterAlarmTimer = function(heaterStartTime){
+    var heaterAlertTime = heaterStartTime.getTime() + warningTimeForHeater*60*1000;
+    var curTime;
+    var curTimestamp;
+    clearInterval(heaterWarningInterval);
     heaterWarningInterval = setInterval(function(){
-        heaterEndTime = new Date() - heaterStartTime;
-
-        if(heaterEndTime>warningTimeForHeater){
+        curTime = new Date();
+        curTime.getTime();
+        curTimestamp = curTimestamp.getTime();
+        if(curTimestamp>heaterAlertTime){
             messageTwilio('Heater has been on for more than 2.5 hours!!', shouldSendToRommates);
         }
     },10*60*1000);
@@ -42,7 +54,14 @@ startHeaterAlarmTimer = function(){
 
 turnOnTimed = function(timeInMins){
     console.log(new Date()+' Turning on via holka ');
-    turnOn();
+    var curTime = new Date();
+    var endTime = new Date(curTime.getTime() + timeInMins*60*1000);
+
+    pin.read(function(error, value) {
+        if(value===0){
+          turnOn(endTime);
+        }
+    });
 
     loggingInterval = setInterval(function(){
         i++;
@@ -65,13 +84,14 @@ messageTwilio = function(msgContent,sendToRommates){
     console.log(new Date()+" "+msgContent);
     if(!debug){
         rp({
+            method: 'POST',
             uri: sInfo.twilioUrl,
-            body: formData,
+            body: formDataCell,
             json: true // Automatically parses the JSON string in the response
         }).then(function (data) {
-            // console.log('data',data);
+            console.log('data',data);
         }).catch(function (err) {
-
+            console.error('error sending twilio',err.message);
         });
 
     }

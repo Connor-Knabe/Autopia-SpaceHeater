@@ -1,11 +1,8 @@
 var schedule = require('node-schedule');
 var timeHelper = require('./timeHelper');
-var dateHelper = require('./dateHelper');
 var heaterService = require('./heaterService');
-var dateHelper = require('./dateHelper');
-
 var _ = require('lodash');
-var minsBeforeFloat = 0;
+
 var cronJobs = [];
 exports.appointmentsModel = [];
 
@@ -24,7 +21,7 @@ exports.addCal = function(appointmentsRaw){
                 cronJobs.push({
                     jobName:'job'+i,
                     jobId: this.appointmentsModel[i].id,
-                    jobRun: jobStartTime(this.appointmentsModel[i].startTime),
+                    jobRun: jobStartTime(this.appointmentsModel[i].startTime,this.appointmentsModel[i].endTime),
                     jobEnd: jobEndTime(this.appointmentsModel[i].endTime)
                 });
             }
@@ -44,12 +41,12 @@ function clearOldJobs(){
     cronJobs = [];
 }
 
-jobStartTime = function(startTime){
+jobStartTime = function(startTime,endTime){
     var job = null;
     console.log('job start time',startTime);
     var thirtyMinsBeforeStart = new Date(startTime);
     return schedule.scheduleJob(thirtyMinsBeforeStart, function(){
-        heaterService.turnOn();
+        heaterService.turnOn(endTime);
     });
 };
 
