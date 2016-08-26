@@ -1,4 +1,4 @@
-// var spaceHeaterInfo = require('./spaceHeaterInfo');
+var spaceHeaterInfo = require('./spaceHeaterInfo');
 module.exports = (function() {
     var router = require('express').Router();
 	router.get('/', function(req,res){
