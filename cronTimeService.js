@@ -47,17 +47,16 @@ function clearOldJobs(){
 jobStartTime = function(startTime){
     var job = null;
     console.log('job start time',startTime);
-    var cronStartTime = dateHelper.dateOffsetFix(startTime.getTime() - minsBeforeFloat*60*1000);
-    return schedule.scheduleJob(cronStartTime, function(){
+    var thirtyMinsBeforeStart = new Date(startTime);
+    return schedule.scheduleJob(thirtyMinsBeforeStart, function(){
         heaterService.turnOn();
     });
 };
 
 jobEndTime = function(endTime){
-    console.log('job end time', endTime);
     var job = null;
-    var cronEndTime = dateHelper.dateOffsetFix(endTime.getTime());
-    return schedule.scheduleJob(cronEndTime, function(){
+    console.log('job end time', endTime);
+    return schedule.scheduleJob(endTime, function(){
         heaterService.turnOff();
     });
 };

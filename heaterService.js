@@ -14,15 +14,14 @@ var heaterWarningInterval = null;
 var debug = true;
 
 turnOff = function(){
-    pin.output(1); // power off
+    pin.output(0); // power off
     messageTwilio('Turning off heater', shouldSendToRommates);
-
     var shouldSendToRommates = false;
     clearInterval(heaterWarningInterval);
 };
 
 turnOn = function(){
-    pin.output(0); // power on
+    pin.output(1); // power on
     messageTwilio('Turning on heater', shouldSendToRommates);
 
     var shouldSendToRommates = false;
@@ -71,12 +70,8 @@ messageTwilio = function(msgContent,sendToRommates){
             json: true // Automatically parses the JSON string in the response
         }).then(function (data) {
             // console.log('data',data);
-            cronTimeService.addCal(data);
         }).catch(function (err) {
-            cronTimeService.addCal(null);
-            if(err && (err.error !== 'Not Found !!!')){
-                console.error('error checking for data', err.message);
-            }
+
         });
 
     }

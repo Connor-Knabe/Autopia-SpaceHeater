@@ -42,9 +42,13 @@ setInterval(function(){
     }).then(function (data) {
         cronTimeService.addCal(data);
     }).catch(function (err) {
-        cronTimeService.addCal(null);
-        if(err && (err.error !== 'Not Found !!!')){
-            console.error('error checking for data', err.message);
+        if(err){
+            if(err.error === 'Not Found !!!'){
+                cronTimeService.addCal(null);
+            } else {
+                console.error('error checking for data', err.message);
+            }
+
         }
     });
 
