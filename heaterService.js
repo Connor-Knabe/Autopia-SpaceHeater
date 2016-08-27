@@ -16,15 +16,22 @@ var loggingInterval = null;
 var warningTimeForHeater = 150;
 var heaterWarningInterval = null;
 var debug = false;
+var hasSentEndMsg = false;
 
 turnOff = function(){
-    pin.output(0); // power off
-    messageTwilio('Turning off heater', shouldSendToRommates);
-    var shouldSendToRommates = false;
+    console.log(new Date(),'turn off heater');
+
+    if(!hasSentEndMsg){
+        pin.output(0); // power off
+        messageTwilio('Turning off heater', shouldSendToRommates);
+        var shouldSendToRommates = false;
+        hasSentEndMsg = true;
+    }
     clearInterval(heaterWarningInterval);
 };
 
 turnOn = function(endTime){
+    hasSentEndMsg = false;
     var curTime = new Date();
     var timeToEnd = endTime.getTime() - curTime.getTime();
     console.log(endTime.getTime() - curTime.getTime());
@@ -45,7 +52,7 @@ startHeaterAlarmTimer = function(heaterStartTime){
     heaterWarningInterval = setInterval(function(){
         curTime = new Date();
         curTime.getTime();
-        curTimestamp = curTimestamp.getTime();
+        curTimestamp = curTime.getTime();
         if(curTimestamp>heaterAlertTime){
             messageTwilio('Heater has been on for more than 2.5 hours!!', shouldSendToRommates);
         }
