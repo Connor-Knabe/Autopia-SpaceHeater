@@ -31,17 +31,21 @@ turnOff = function(){
 };
 
 turnOn = function(endTime){
-    hasSentEndMsg = false;
-    var curTime = new Date();
-    var timeToEnd = endTime.getTime() - curTime.getTime();
-    console.log(endTime.getTime() - curTime.getTime());
-    timeToEnd = timeToEnd / 60000;
-    pin.output(1); // power on
-    var shouldSendToRommates = false;
-    messageTwilio('Turning on heater should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
-    var heaterStartTime = new Date();
-    clearInterval(heaterWarningInterval);
-    startHeaterAlarmTimer(heaterStartTime);
+    pin.read(function(error, value) {
+        if(value===0){
+            hasSentEndMsg = false;
+            var curTime = new Date();
+            var timeToEnd = endTime.getTime() - curTime.getTime();
+            console.log(endTime.getTime() - curTime.getTime());
+            timeToEnd = timeToEnd / 60000;
+            pin.output(1); // power on
+            var shouldSendToRommates = false;
+            messageTwilio('Turning on heater should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
+            var heaterStartTime = new Date();
+            clearInterval(heaterWarningInterval);
+            startHeaterAlarmTimer(heaterStartTime);
+        }
+    });
 };
 
 startHeaterAlarmTimer = function(heaterStartTime){
