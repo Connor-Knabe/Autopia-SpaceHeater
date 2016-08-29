@@ -46,7 +46,8 @@ jobStartTime = function(startTime,endTime){
     console.log('job start time',startTime);
     var thirtyMinsBeforeStart = new Date(startTime);
     return schedule.scheduleJob(thirtyMinsBeforeStart, function(){
-        heaterService.turnOn(endTime);
+        var fromCalendar = true;
+        heaterService.turnOn(endTime, fromCalendar);
     });
 };
 

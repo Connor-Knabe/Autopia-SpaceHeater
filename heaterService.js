@@ -19,10 +19,8 @@ var debug = false;
 var hasSentEndMsg = false;
 
 turnOff = function(){
-    console.log(new Date(),'turn off heater');
-
+    pin.output(0); // power off
     if(!hasSentEndMsg){
-        pin.output(0); // power off
         messageTwilio('Turning off heater', shouldSendToRommates);
         var shouldSendToRommates = false;
         hasSentEndMsg = true;
@@ -30,17 +28,20 @@ turnOff = function(){
     clearInterval(heaterWarningInterval);
 };
 
-turnOn = function(endTime){
+turnOn = function(endTime, fromCalendar){
     pin.read(function(error, value) {
         if(value===0){
             hasSentEndMsg = false;
             var curTime = new Date();
             var timeToEnd = endTime.getTime() - curTime.getTime();
-            console.log(endTime.getTime() - curTime.getTime());
             timeToEnd = timeToEnd / 60000;
             pin.output(1); // power on
             var shouldSendToRommates = false;
-            messageTwilio('Turning on heater should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
+            if(fromCalendar){
+                messageTwilio('Turning on heater via calendar should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
+            } else {
+                messageTwilio('Turning on heater via holka float should turn off in '+Math.round(timeToEnd)+' mins', shouldSendToRommates);
+            }
             var heaterStartTime = new Date();
             clearInterval(heaterWarningInterval);
             startHeaterAlarmTimer(heaterStartTime);
@@ -59,18 +60,18 @@ startHeaterAlarmTimer = function(heaterStartTime){
         curTimestamp = curTime.getTime();
         if(curTimestamp>heaterAlertTime){
             messageTwilio('Heater has been on for more than 2.5 hours!!', shouldSendToRommates);
+            turnOff();
         }
     },10*60*1000);
 };
 
 turnOnTimed = function(timeInMins){
-    console.log(new Date()+' Turning on via holka ');
     var curTime = new Date();
     var endTime = new Date(curTime.getTime() + timeInMins*60*1000);
-
+    var fromCalendar = false;
     pin.read(function(error, value) {
         if(value===0){
-          turnOn(endTime);
+          turnOn(endTime,fromCalendar);
         }
     });
 
