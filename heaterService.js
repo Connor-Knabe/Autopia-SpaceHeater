@@ -5,11 +5,11 @@ var tessel = require('tessel'); // Import tessel
 var pin = tessel.port.B.pin[7]; // select pin 2 on port A
 pin.pull('pulldown');
 
-var leds = tessel.led;
-leds[0].low();
-leds[1].low();
-leds[2].low();
-leds[3].low();
+var leds = tessel.LED;
+leds[0].off();
+leds[1].off();
+leds[2].off();
+leds[3].off();
 
 var i = 0;
 var loggingInterval = null;
